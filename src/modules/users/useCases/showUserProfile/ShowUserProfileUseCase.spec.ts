@@ -1,6 +1,7 @@
 import { InMemoryUsersRepository } from "@modules/users/repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
 import { ICreateUserDTO } from "../createUser/ICreateUserDTO";
+import { ShowUserProfileError } from "./ShowUserProfileError";
 import { ShowUserProfileUseCase } from "./ShowUserProfileUseCase";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -35,5 +36,19 @@ describe("Show User Profile", () => {
     };
 
     expect(user).toMatchObject(expectedReturn);
+  });
+
+  it("should not be able show user profile info with user not exists", async () => {
+    const userData: ICreateUserDTO = {
+      email: "ednandias@gmail.com",
+      name: "Ednan Dias",
+      password: "eusouonan65",
+    };
+
+    await createUserUseCase.execute(userData);
+
+    await expect(async () => {
+      await showUserProfileUseCase.execute("1234");
+    }).rejects.toBeInstanceOf(ShowUserProfileError);
   });
 });

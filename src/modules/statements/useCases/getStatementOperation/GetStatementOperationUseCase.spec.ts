@@ -55,31 +55,29 @@ describe("Get Statement Use Case", () => {
   });
 
   it("should not be able get statement operation if user not exists", async () => {
-    expect(async () => {
-      const userData: ICreateUserDTO = {
-        email: "ednandias@gmail.com",
-        name: "Ednan Dias",
-        password: "eusouonan65",
-      };
+    const userData: ICreateUserDTO = {
+      email: "ednandias@gmail.com",
+      name: "Ednan Dias",
+      password: "eusouonan65",
+    };
 
-      const { id: user_id } = await createUserUseCase.execute(userData);
+    const { id: user_id } = await createUserUseCase.execute(userData);
 
-      const deposit: ICreateStatementDTO = {
-        description: "Deposit Test",
-        amount: 400,
-        user_id: user_id,
-        type: "deposit" as OperationType,
-      };
+    const deposit: ICreateStatementDTO = {
+      description: "Deposit Test",
+      amount: 400,
+      user_id: user_id,
+      type: "deposit" as OperationType,
+    };
 
-      const { id: statement_id } = await createStatementUseCase.execute(
-        deposit
-      );
+    const { id: statement_id } = await createStatementUseCase.execute(deposit);
 
-      await getStatementOperationUseCase.execute({
-        user_id: "12345",
+    await expect(
+      getStatementOperationUseCase.execute({
+        user_id: "1234",
         statement_id,
-      });
-    }).rejects.toBeInstanceOf(GetStatementOperationError.UserNotFound);
+      })
+    ).rejects.toBeInstanceOf(GetStatementOperationError.UserNotFound);
   });
 
   it("should not be able get statement operation if statement not exists", async () => {
@@ -100,11 +98,11 @@ describe("Get Statement Use Case", () => {
 
     await createStatementUseCase.execute(deposit);
 
-    expect(async () => {
-      await getStatementOperationUseCase.execute({
+    await expect(
+      getStatementOperationUseCase.execute({
         user_id: user_id as string,
-        statement_id: "123456",
-      });
-    }).rejects.toBeInstanceOf(GetStatementOperationError.StatementNotFound);
+        statement_id: "1234",
+      })
+    ).rejects.toBeInstanceOf(GetStatementOperationError.StatementNotFound);
   });
 });
