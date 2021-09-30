@@ -1,4 +1,5 @@
 {
+  "name": "default",
   "username": "postgres",
   "password": "postgres",
   "type": "postgres",
